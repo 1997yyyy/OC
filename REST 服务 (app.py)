@@ -1,0 +1,35 @@
+from flask import Flask, jsonify, request
+from algorithms import (
+    fibonacci,
+    is_palindrome,
+    reverse_linked_list,
+    build_linked_list,
+    linked_list_to_list
+)
+
+app = Flask(__name__)
+
+@app.route('/fibonacci/<int:n>')
+def get_fibonacci(n):
+    if n < 0:
+        return jsonify({"error": "n must be a natural number"}), 400
+    return jsonify(fibonacci(n))
+
+@app.route('/palindrome/<int:num>')
+def check_palindrome(num):
+    return jsonify({"is_palindrome": is_palindrome(num)})
+
+@app.route('/reverse-linked-list', methods=['POST'])
+def reverse_list():
+    try:
+        data = request.json
+        if not isinstance(data, list):
+            raise ValueError
+        head = build_linked_list(data)
+        reversed_head = reverse_linked_list(head)
+        return jsonify(linked_list_to_list(reversed_head))
+    except:
+        return jsonify({"error": "Invalid input format"}), 400
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
