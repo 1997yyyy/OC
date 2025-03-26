@@ -1,0 +1,52 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def fibonacci(n: int) -> list:
+    """生成前n个斐波那契数"""
+    if n <= 0:
+        return []
+    fib = [0, 1]
+    if n == 1:
+        return [0]
+    for _ in range(n-2):
+        fib.append(fib[-1] + fib[-2])
+    return fib[:n]
+
+def is_palindrome(num: int) -> bool:
+    """判断回文数"""
+    if num < 0:
+        return False
+    return str(num) == str(num)[::-1]
+
+def reverse_linked_list(head: ListNode) -> ListNode:
+    """迭代反转链表"""
+    prev = None
+    current = head
+    while current:
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    return prev
+
+# 辅助函数
+def build_linked_list(arr: list) -> ListNode:
+    """数组转链表"""
+    if not arr:
+        return None
+    head = ListNode(arr[0])
+    current = head
+    for val in arr[1:]:
+        current.next = ListNode(val)
+        current = current.next
+    return head
+
+def linked_list_to_list(head: ListNode) -> list:
+    """链表转数组"""
+    result = []
+    while head:
+        result.append(head.val)
+        head = head.next
+    return result
