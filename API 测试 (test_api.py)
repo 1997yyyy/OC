@@ -1,0 +1,40 @@
+import pytest
+import requests
+import json
+
+BASE_URL = 'http://localhost:5000'
+
+def test_fibonacci():
+    # 正常用例
+    response = requests.get(f"{BASE_URL}/fibonacci/5")
+    assert response.status_code == 200
+    assert response.json() == [0, 1, 1, 2, 3]
+    
+    # 边界用例
+    assert requests.get(f"{BASE_URL}/fibonacci/1").json() == [0]
+    
+    # 错误处理
+    assert requests.get(f"{BASE_URL}/fibonacci/-5").status_code == 400
+
+def test_palindrome():
+    assert requests.get(f"{BASE_URL}/palindrome/121").json()["is_palindrome"] is True
+    assert requests.get(f"{BASE_URL}/palindrome/123").json()["is_palindrome"] is False
+    assert requests.get(f"{BASE_URL}/palindrome/-121").json()["is_palindrome"] is False
+
+def test_reverse_linked_list():
+    # 正常输入
+    response = requests.post(
+        f"{BASE_URL}/reverse-linked-list",
+        json=[1, 2, 3, 4]
+    )
+    assert response.json() == [4, 3, 2, 1]
+    
+    # 空输入
+    assert requests.post(f"{BASE_URL}/reverse-linked-list", json=[]).json() == []
+    
+    # 错误格式
+    response = requests.post(
+        f"{BASE_URL}/reverse-linked-list",
+        json={"data": "invalid"}
+    )
+    assert response.status_code == 400
